@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <bool name="enable_browser_support_on_ad_view">false</bool>
+    <bool name="enable_key_events_on_ad_view">false</bool>
+    <bool name="enable_play_state_overlay_on_ad_view">false</bool>
+    <integer name="play_state_overlay_alpha_value">150</integer>
+    <string name="ad_tag"> "https://pubads.g.doubleclick.net/gampad/ads?iu=/21718453763/littapptestad&amp;;env=vp&amp;impl=s&amp;correlator=&amp;tfcd=0&amp;npa=0&amp;gdfp_req=1&amp;output=vast&amp;sz=640x480&amp;unviewed_position_start=1"</string>
+</resources>

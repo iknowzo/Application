@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright 2015-2016 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+A copy of the License is located at
+
+    http://aws.amazon.com/apache2.0/
+
+or in the "license" file accompanying this file. This file is distributed
+on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+express or implied. See the License for the specific language governing
+permissions and limitations under the License.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.litttv.android.lifegenius"
+    android:versionCode="17"
+    android:versionName="2.0.0" >
+
+    <uses-sdk
+        android:minSdkVersion="21"
+        android:targetSdkVersion="23" />
+
+    <uses-feature
+        android:name="android.software.leanback"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.touchscreen"
+        android:required="false" />
+
+    <!-- Permission for getting voice command controls using media session -->
+    <uses-permission android:name="com.amazon.permission.media.session.voicecommandcontrol" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <uses-feature
+        android:name="android.hardware.microphone"
+        android:required="false" />
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- Launcher integration -->
+    <uses-permission android:name="com.amazon.device.permission.COMRADE_CAPABILITIES" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+
+    <permission
+        android:name="com.litttv.android.lifegenius.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="com.litttv.android.lifegenius.permission.C2D_MESSAGE" />
+
+    <application
+        android:name="com.amazon.android.tv.tenfoot.base.TenFootApp"
+        android:allowBackup="true"
+        android:banner="@drawable/app_banner"
+        android:icon="@drawable/app_logo"
+        android:label="litt tv"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="com.amazon.android.tv.tenfoot.ui.activities.SplashActivity"
+            android:launchMode="singleTask"
+            android:noHistory="true"
+            android:screenOrientation="landscape" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+            </intent-filter>
+            <!-- Launcher integration intents -->
+            <!-- Uncomment the below intent filters to enable launcher integration -->
+            <!--
+            <intent-filter>
+                <action android:name="PLAY_CONTENT_FROM_LAUNCHER"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="SIGN_IN_FROM_LAUNCHER"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+            -->
+            <!-- Launcher integration intents complete -->
+        </activity>
+        <activity
+            android:name="com.amazon.android.tv.tenfoot.ui.activities.FullContentBrowseActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name="com.amazon.android.tv.tenfoot.ui.activities.ContentBrowseActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name="com.amazon.android.tv.tenfoot.ui.activities.ContentDetailsActivity"
+            android:exported="true" >
+
+            <!-- Receives the PendingIntent requests to view a specific content. -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <!-- No category needed, because the Intent will specify this class component -->
+            </intent-filter>
+        </activity>
+        <activity android:name="com.amazon.android.tv.tenfoot.ui.activities.ContentSearchActivity" />
+        <activity android:name="com.amazon.android.uamp.ui.PlaybackActivity" /> <!-- Launcher integration -->
+        <!-- Uncomment the below receiver to enable launcher integration -->
+        <!--
+        <receiver android:name="com.amazon.android.contentbrowser.helper.LauncherIntegrationBroadcastReceiver" >
+            <intent-filter>
+                <action android:name="com.amazon.device.REQUEST_CAPABILITIES" >
+                </action>
+            </intent-filter>
+        </receiver>
+        -->
+        <receiver
+            android:name="com.amazon.android.contentbrowser.recommendations.BootCompletedReceiver"
+            android:enabled="true"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+                <action android:name="android.intent.action.TIME_SET" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name="com.amazon.android.contentbrowser.recommendations.UpdateRecommendationsService"
+            android:enabled="true" />
+        <service
+            android:name="com.amazon.android.contentbrowser.recommendations.DeleteRecommendationService"
+            android:enabled="true" />
+
+        <meta-data
+            android:name="AMZNAP@AMZNPlayer"
+            android:value="UAMP@com.amazon.mediaplayer.module.AMZNMediaPlayerImplCreator" />
+        <meta-data
+            android:name="AMZNAP@VASTAdsPlayer"
+            android:value="IAds@com.amazon.android.ads.vast.module.VastAdsImplCreator" />
+        <meta-data
+            android:name="AMZNAP@PassThroughLogin"
+            android:value="IAuthentication@com.amazon.android.auth.passthrough.PassThroughLoginImplCreator" />
+        <!--
+         Register AnalyticsReceiver and AnalyticsService to support background
+         dispatching on non-Google Play devices.
+        -->
+        <receiver
+            android:name="com.google.android.gms.analytics.AnalyticsReceiver"
+            android:enabled="true" >
+            <intent-filter>
+                <action android:name="com.google.android.gms.analytics.ANALYTICS_DISPATCH" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name="com.google.android.gms.analytics.AnalyticsService"
+            android:enabled="true"
+            android:exported="false" />
+
+        <meta-data
+            android:name="AMZNAP@GoogleAnalytics"
+            android:value="IAnalytics@com.amazon.analytics.google.GoogleAnalyticsImplCreator" />
+
+        <activity
+            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+            android:exported="false"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <receiver
+            android:name="com.google.android.gms.measurement.AppMeasurementReceiver"
+            android:enabled="true"
+            android:exported="false" >
+        </receiver>
+        <receiver
+            android:name="com.google.android.gms.measurement.AppMeasurementInstallReferrerReceiver"
+            android:enabled="true"
+            android:permission="android.permission.INSTALL_PACKAGES" >
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name="com.google.android.gms.measurement.AppMeasurementService"
+            android:enabled="true"
+            android:exported="false" />
+
+        <receiver
+            android:name="com.google.firebase.iid.FirebaseInstanceIdReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+
+                <category android:name="com.litttv.android.lifegenius" />
+            </intent-filter>
+        </receiver>
+        <!--
+ Internal (not exported) receiver used by the app to start its own exported services
+             without risk of being spoofed.
+        -->
+        <receiver
+            android:name="com.google.firebase.iid.FirebaseInstanceIdInternalReceiver"
+            android:exported="false" />
+        <!--
+ FirebaseInstanceIdService performs security checks at runtime,
+             no need for explicit permissions despite exported="true"
+        -->
+        <service
+            android:name="com.google.firebase.iid.FirebaseInstanceIdService"
+            android:exported="true" >
+            <intent-filter android:priority="-500" >
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+
+        <provider
+            android:name="com.google.firebase.provider.FirebaseInitProvider"
+            android:authorities="com.litttv.android.lifegenius.firebaseinitprovider"
+            android:exported="false"
+            android:initOrder="100" />
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+    </application>
+
+</manifest>
